@@ -1,0 +1,38 @@
+<?php
+// ============================================================
+// config.php do Moodle — EXEMPLO (credenciais mascaradas)
+// Local real (no container): /var/www/html/config.php
+// Volume: moodle-app_moodle_data
+// ============================================================
+
+// URL pública do Moodle (HTTPS obrigatório)
+$CFG->wwwroot   = 'https://learning.test.local';
+
+// Imprescindível quando o Moodle está atrás de proxy/SSL.
+// Evita gerar URLs em http:// e o loop de redirecionamento.
+$CFG->sslproxy  = true;
+
+// Conexão com o banco de dados (MariaDB)
+$CFG->dbtype    = 'mariadb';
+$CFG->dblibrary = 'native';
+$CFG->dbhost    = 'database';        // nome do serviço no compose
+$CFG->dbname    = 'moodle';
+$CFG->dbuser    = 'moodle_user';
+$CFG->dbpass    = '###REDACTED###';
+$CFG->prefix    = 'mdl_';
+$CFG->dboptions = array(
+    'dbport' => 3306,
+    'dbschema' => '',
+    'dbcollation' => 'utf8mb4_unicode_ci',
+);
+
+// Caminhos internos (imagem Elestio)
+$CFG->dataroot  = '/var/www/moodledata';
+
+$CFG->admin     = 'admin';
+
+// Debug (manter desabilitado em produção)
+$CFG->debug = 0;
+$CFG->debugdisplay = 0;
+
+require_once(__DIR__ . '/lib/setup.php');

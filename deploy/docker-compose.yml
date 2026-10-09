@@ -1,0 +1,57 @@
+# ============================================================
+# Docker Compose — Stack Moodle (EXEMPLO SANITIZADO)
+# ------------------------------------------------------------
+# Este arquivo é um exemplo de referência, com credenciais
+# MASCARADAS. NÃO contém as senhas reais.
+# Local real no servidor: /var/lib/docker/moodle-app/docker-compose.yml
+# ============================================================
+
+services:
+  database:
+    image: mariadb:10.11
+    container_name: moodle-app-database-1
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: "###REDACTED###"
+      MYSQL_DATABASE: "moodle"
+      MYSQL_USER: "moodle_user"
+      MYSQL_PASSWORD: "###REDACTED###"
+    volumes:
+      - moodle-app_db_data:/var/lib/mysql
+    networks:
+      - moodle-net
+
+  moodle:
+    image: elestio/moodle:latest
+    container_name: moodle-app-moodle-1
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      MOODLE_URL: "https://learning.test.local"
+      DB_HOST: "database"
+      DB_NAME: "moodle"
+      DB_USER: "moodle_user"
+      DB_PASS: "###REDACTED###"
+    volumes:
+      - moodle-app_moodle_data:/var/www/html
+      - moodle-app_moodledata_uploads:/var/www/moodledata
+      # Bind mounts persistentes de HTTPS (todos no host):
+      - /var/lib/docker/moodle-app/ssl:/etc/apache2/ssl
+      - /var/lib/docker/moodle-app/apache2-sites:/etc/apache2/sites-available
+      - /var/lib/docker/moodle-app/apache2-sites-enabled:/etc/apache2/sites-enabled
+      - /var/lib/docker/moodle-app/apache2-mods:/etc/apache2/mods-enabled
+    depends_on:
+      - database
+    networks:
+      - moodle-net
+
+volumes:
+  moodle-app_db_data:
+  moodle-app_moodle_data:
+  moodle-app_moodledata_uploads:
+
+networks:
+  moodle-net:
+    driver: bridge
