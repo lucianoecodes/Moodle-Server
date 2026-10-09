@@ -1,0 +1,15 @@
+# Gradlew / Maven / etc.
+*.class
+*.log
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Sensíveis (manter de fora do versionamento por segurança)
+.env
+*.key
+*.pem
+*.crt
+secrets/
